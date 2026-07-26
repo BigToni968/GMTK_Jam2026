@@ -8,6 +8,7 @@ namespace Game
     [Serializable]
     public enum TypeRes
     {
+        Free,
         Wood,
         Stone,
         Iron,
@@ -49,16 +50,35 @@ namespace Game
 
         public bool TryUpdate(TypeRes type, int amount, out Stove newStove)
         {
+            OnValidate();
             newStove = null;
 
             _recipes.TryGetValue(type, out var recipe);
 
-            if (recipe.amount == amount)
+            if (recipe.amount <= amount)
             {
                 newStove = recipe.prefab;
                 return true;
             }
 
+            return false;
+        }
+
+        public bool HasUpdate(TypeRes curent, out TypeRes? nextLevel)
+        {
+            nextLevel = null;
+            var index = 0;
+
+            foreach (var recipe in recipes)
+            {
+                if (recipe.type == curent && recipes.Length > index + 1)
+                {
+                    nextLevel = recipes[index + 1].type;
+                    return true;
+                }
+                index ++;
+            }
+            
             return false;
         }
     }
