@@ -14,4 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <Sensitivity>k__BackingField: {x: 1, y: 1}
   <FullScreenMode>k__BackingField: 0
-  <QualitySettings>k__BackingField: {fileID: 0}
+  <Resolution>k__BackingField: {x: 1920, y: 1080}

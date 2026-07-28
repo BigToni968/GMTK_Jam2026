@@ -1,3 +1,4 @@
+using Game.Preferences;
 using UnityEngine;
 
 namespace Game.ReadOnly
@@ -6,7 +7,7 @@ namespace Game.ReadOnly
     public class PreferencesGameData : ScriptableObject
     {
         [field: SerializeField] public Vector2 Sensitivity { get; private set; } = Vector2.one;
-        [field: SerializeField] public FullScreenMode  FullScreenMode { get; private set; } = FullScreenMode.ExclusiveFullScreen;
-        [field: SerializeField] public Vector2 Resolution { get; private set; } = new Vector2(1920,1080);
+        [field: SerializeField] public FullScreenMode FullScreenMode { get; private set; } = FullScreenMode.ExclusiveFullScreen;
+        [field: SerializeField] public AudioGame Audio { get; private set; } = new() { general = .25f, music = 1f, sound = 1f };
     }
 }
