@@ -17,7 +17,7 @@ namespace Game.Abstraction
 
         public virtual void Hide()
         {
-            gameObject.SetActive(true);
+            gameObject.SetActive(false);
         }
     }
 }
