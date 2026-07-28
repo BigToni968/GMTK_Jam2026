@@ -8,8 +8,11 @@ namespace Game.UI
     public class WindowMenu : MonoView
     {
         [SerializeField] private Canvas self;
+        [SerializeField] private WindowSettings windowSettings;
         [SerializeField] private CursorLockMode cursorMode;
 
+        private bool menuFlag = false;
+        
         private void Start()
         {
             Cursor.lockState = cursorMode;
@@ -39,10 +42,13 @@ namespace Game.UI
         {
             if (Input.GetKeyDown(KeyCode.Escape))
             {
-                self.enabled = !self.enabled;
+                menuFlag = !menuFlag;
+                self.enabled = menuFlag;
+                if (!menuFlag)
+                    windowSettings.Hide();
                 cursorMode = self.enabled ? CursorLockMode.None : CursorLockMode.Locked;
                 Cursor.lockState = cursorMode;
-                Time.timeScale = Convert.ToSingle(self.enabled);//Временное решение.
+                Time.timeScale = Convert.ToSingle(!self.enabled);//Временное решение.
             }
         }
     }

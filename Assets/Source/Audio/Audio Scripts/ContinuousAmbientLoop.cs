@@ -1,34 +1,32 @@
 using System.Collections;
+using Game.ReadOnly; // References your SoundManager namespace
 using UnityEngine;
-using Game; // References your SoundManager namespace
+using Game.Other;
 
 public class ContinuousAmbientLoop : MonoBehaviour
 {
     [Header("Sound Manager Settings")]
-    public SoundType soundType = SoundType.WIND;
+    [SerializeField] private SoundType soundType = SoundType.WIND;
+    [SerializeField] private Audio audio;
 
     [Header("Transition Settings")]
     [Tooltip("How many seconds the fade transition takes between clips.")]
-    public float crossfadeDuration = 3.0f;
+    [SerializeField] private float crossfadeDuration = 3.0f;
 
-    [Header("Volume Control")]
-    [Range(0f, 1f)]
-    public float masterVolume = 1.0f;
-
-    private AudioSource sourceA;
-    private AudioSource sourceB;
-    private bool isSourceActive = false; // false = Source A, true = Source B
+    private AudioSource _sourceA;
+    private AudioSource _sourceB;
+    private bool _isSourceActive = false; // false = Source A, true = Source B
 
     private void Awake()
     {
         // Automatically create two 2D AudioSources for crossfading
-        sourceA = gameObject.AddComponent<AudioSource>();
-        sourceB = gameObject.AddComponent<AudioSource>();
+        _sourceA = gameObject.AddComponent<AudioSource>();
+        _sourceB = gameObject.AddComponent<AudioSource>();
 
-        sourceA.spatialBlend = 0f; // Pure 2D
-        sourceB.spatialBlend = 0f; // Pure 2D
-        sourceA.playOnAwake = false;
-        sourceB.playOnAwake = false;
+        _sourceA.spatialBlend = 0f; // Pure 2D
+        _sourceB.spatialBlend = 0f; // Pure 2D
+        _sourceA.playOnAwake = false;
+        _sourceB.playOnAwake = false;
     }
 
     private void Start()
@@ -41,7 +39,7 @@ public class ContinuousAmbientLoop : MonoBehaviour
         while (true)
         {
             // 1. Fetch next random clip from SoundManager
-            AudioClip nextClip = SoundManager.GetRandomClip(soundType);
+            var nextClip = audio.StorageClips.GetRandomClip(soundType);
 
             if (nextClip == null)
             {
@@ -50,8 +48,8 @@ public class ContinuousAmbientLoop : MonoBehaviour
             }
 
             // 2. Pick current active source and incoming source
-            AudioSource currentSource = isSourceActive ? sourceB : sourceA;
-            AudioSource incomingSource = isSourceActive ? sourceA : sourceB;
+            var currentSource = _isSourceActive ? _sourceB : _sourceA;
+            var incomingSource = _isSourceActive ? _sourceA : _sourceB;
 
             // 3. Prepare incoming source
             incomingSource.clip = nextClip;
@@ -59,32 +57,30 @@ public class ContinuousAmbientLoop : MonoBehaviour
             incomingSource.Play();
 
             // 4. Crossfade between current and incoming sources
-            float timer = 0f;
-            float currentStartVol = currentSource.volume;
+            var timer = 0f;
+            var currentStartVol = currentSource.volume;
 
             while (timer < crossfadeDuration)
             {
                 timer += Time.deltaTime;
-                float progress = timer / crossfadeDuration;
+                var progress = timer / crossfadeDuration;
 
-                incomingSource.volume = Mathf.Lerp(0f, masterVolume, progress);
+                incomingSource.volume = Mathf.Lerp(0f, audio.SoundSource.volume, progress);
                 if (currentSource.isPlaying)
-                {
                     currentSource.volume = Mathf.Lerp(currentStartVol, 0f, progress);
-                }
 
                 yield return null;
             }
 
             // Ensure exact target volume
-            incomingSource.volume = masterVolume;
+            incomingSource.volume = audio.SoundSource.volume;
             currentSource.Stop();
 
             // Swap active source status
-            isSourceActive = !isSourceActive;
+            _isSourceActive = !_isSourceActive;
 
             // 5. Wait for the clip to finish (minus crossfade overlap time)
-            float waitTime = Mathf.Max(0.1f, nextClip.length - crossfadeDuration);
+            var waitTime = Mathf.Max(0.1f, nextClip.length - crossfadeDuration);
             yield return new WaitForSeconds(waitTime);
         }
     }
@@ -92,11 +88,8 @@ public class ContinuousAmbientLoop : MonoBehaviour
     // Call this from WinterStormCrossfader to adjust this layer's volume!
     public void SetMasterVolume(float volume)
     {
-        masterVolume = Mathf.Clamp01(volume);
-        AudioSource activeSource = isSourceActive ? sourceB : sourceA;
+        var activeSource = _isSourceActive ? _sourceB : _sourceA;
         if (activeSource != null && activeSource.isPlaying)
-        {
-            activeSource.volume = masterVolume;
-        }
+            activeSource.volume = audio.SoundSource.volume;
     }
 }

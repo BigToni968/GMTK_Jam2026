@@ -1,51 +1,52 @@
 using System.Collections;
+using Game.ReadOnly;
 using UnityEngine;
-using Game;
+using Game.Other;
 
 public class AmbientScatterer : MonoBehaviour
 {
     [Header("Sound Type Reference")]
-    public SoundType soundType = SoundType.STORM;
-    public AudioSource audioSource;
+    [SerializeField] private SoundType soundType = SoundType.STORM;
+    [SerializeField] private protected Audio Audio;
 
     [Header("Interval Settings")]
-    public float minInterval = 3f;
-    public float maxInterval = 8f;
+    [SerializeField] private float minInterval = 3f;
+    [SerializeField] private float maxInterval = 8f;
 
     [Header("Randomization")]
-    public float minPitch = 0.9f;
-    public float maxPitch = 1.1f;
-    public float minVolume = 0.7f;
-    public float maxVolume = 1.0f;
+    [SerializeField] private float minPitch = 0.9f;
+    [SerializeField] private float maxPitch = 1.1f;
 
     protected virtual void Start()
     {
         StartCoroutine(SpawnAudioRoutine());
     }
 
+    public void SetInterval(Vector2 interval)
+    {
+        minInterval = interval.x;
+        maxInterval = interval.y;
+    }
+
     private IEnumerator SpawnAudioRoutine()
     {
         while (true)
         {
-            float waitTime = Random.Range(minInterval, maxInterval);
-            yield return new WaitForSeconds(waitTime);
-
+            yield return new WaitForSeconds(Random.Range(minInterval, maxInterval));
             PlayRandomSound();
         }
     }
 
     protected virtual void PlayRandomSound()
     {
-        if ( audioSource == null) 
+        if ( Audio == null) 
             return;
 
-        AudioClip clip = SoundManager.GetRandomClip(soundType);
+        var clip = Audio.StorageClips.GetRandomClip(soundType);
         if (clip == null) 
             return;
 
-        audioSource.pitch = Random.Range(minPitch, maxPitch);
-        audioSource.volume = Random.Range(minVolume, maxVolume);
-
-        audioSource.PlayOneShot(clip);
+        Audio.SoundSource.pitch = Random.Range(minPitch, maxPitch);
+        Audio.SoundSource.PlayOneShot(clip);
     }
 }

@@ -21,7 +21,7 @@ public class AmbientBoxScatterer : AmbientScatterer
 
         // Calculate random spawn point inside or on the surface of the box
         Vector3 spawnPos = spawnOnSurfaceOnly ? GetRandomPointOnSurface(boundsBox) : GetRandomPointInside(boundsBox);
-        audioSource.transform.position = spawnPos;
+        Audio.transform.position = spawnPos;
 
         base.PlayRandomSound();
     }

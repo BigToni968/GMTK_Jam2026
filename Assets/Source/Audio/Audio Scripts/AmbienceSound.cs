@@ -1,21 +1,19 @@
-using System.Collections;
-using System.Collections.Generic;
+using Game.ReadOnly;
 using UnityEngine;
-using Game.Unit;
+using Game.Other;
 using Game;
 
 public class AmbienceSound : MonoBehaviour
 {
-
-    public AudioClip AudioClip;
-
+    [SerializeField] private Audio audio;
 
     private void OnTriggerEnter(Collider other)
     {
         Debug.Log(other.name); 
         if (other.TryGetComponent(out GhostMusic ghost))
         {
-            SoundManager.PlaySound(SoundType.STORM);
+            var clips = audio.StorageClips.GetRandomClip(SoundType.STORM);
+            audio.SoundSource.PlayOneShot(clips);
         }
     }
 }

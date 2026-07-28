@@ -1,3 +1,4 @@
+using Game.ReadOnly;
 using UnityEngine;
 using Game.Save;
 
@@ -8,6 +9,7 @@ namespace Game.Other
         [SerializeField] private Saver saver;
         [field: SerializeField] public AudioSource MusicSource { get; private set; }
         [field: SerializeField] public AudioSource SoundSource { get; private set; }
+        [field: SerializeField] public StorageAudioClips StorageClips { get; private set; }
         
         private float _generalVolume;
         private float _musicVolume;

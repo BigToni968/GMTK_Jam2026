@@ -10,6 +10,8 @@ namespace Game.Component
 
         public void Rotate(Transform body, Vector2 sensitivity)
         {
+            if (Time.deltaTime <= 0f) return;
+            
             var mouseX = Input.GetAxis("Mouse X") * sensitivity.x;
             var mouseY = Input.GetAxis("Mouse Y") * sensitivity.y;
             

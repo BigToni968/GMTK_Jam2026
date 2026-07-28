@@ -1,4 +1,6 @@
 using System.Collections;
+using Game.Other;
+using Game.ReadOnly;
 using UnityEngine;
 
 namespace Game
@@ -14,6 +16,7 @@ namespace Game
             [Range(0f, 1f)] public float volume;
         }
 
+        [SerializeField] private Audio audio;
         [Header("Loop Configurations per Fire Level")]
         [SerializeField] private FireLevelAudio[] levelAudioProfiles;
 
@@ -68,15 +71,16 @@ namespace Game
             // 1. Play one-shot ignition sound using static SoundManager call
             if (oldLevel == 0)
             {
-                SoundManager.PlaySound(SoundType.FIRE, 1f);
+                var clip = audio.StorageClips.GetRandomClip(SoundType.FIRE);
+                audio.SoundSource.PlayOneShot(clip,1f);
             }
 
             // 2. Crossfade local spatial AudioSource loop to match fire level
-            FireLevelAudio profile = GetProfileForLevel(currentLevel);
+            var profile = GetProfileForLevel(currentLevel);
             if (profile.loopClip != null)
             {
                 if (transitionCoroutine != null) StopCoroutine(transitionCoroutine);
-                transitionCoroutine = StartCoroutine(ChangeLoopClipRoutine(profile.loopClip, profile.volume));
+                transitionCoroutine = StartCoroutine(ChangeLoopClipRoutine(profile.loopClip, audio.SoundSource.volume));
             }
 
             // 3. Trigger periodic crackles/pops
@@ -162,15 +166,15 @@ namespace Game
             while (currentLevel > 0)
             {
                 // Higher fire levels speed up pop frequency
-                float intensityMultiplier = Mathf.Lerp(1.5f, 0.5f, (float)currentLevel / 5f);
-                float waitTime = Random.Range(minPopInterval, maxPopInterval) * intensityMultiplier;
+                var intensityMultiplier = Mathf.Lerp(1.5f, 0.5f, currentLevel / 5f);
+                var waitTime = Random.Range(minPopInterval, maxPopInterval) * intensityMultiplier;
 
                 yield return new WaitForSeconds(waitTime);
 
                 if (currentLevel > 0)
                 {
-                    // Triggers a random pop sound from SoundManager's FIRE list
-                    SoundManager.PlaySound(SoundType.FIRE, 0.6f);
+                    var clip = audio.StorageClips.GetRandomClip(SoundType.FIRE);
+                    audio.SoundSource.PlayOneShot(clip,.6f);
                 }
             }
         }
