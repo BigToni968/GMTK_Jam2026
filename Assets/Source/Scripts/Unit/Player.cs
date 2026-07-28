@@ -2,11 +2,16 @@ using Game.Unit.Component;
 using Game.Abstraction;
 using Game.Component;
 using UnityEngine;
+using System;
 
 namespace Game.Unit
 {
     public class Player : MonoBehaviour
     {
+        public event Action OnItemsEditInHandEv;
+        
+        [field: SerializeField] public Transform LHand { get; private set; }
+        
         [SerializeField] private Rigidbody body;
         [SerializeField] private RotateCamera  rotateCamera;
         [SerializeField] private LayerMask layerMask;
@@ -19,6 +24,16 @@ namespace Game.Unit
         private void Awake()
         {
             Stats.Init();
+        }
+
+        public void Dead()
+        {
+            body.constraints = RigidbodyConstraints.None;
+        }
+
+        public void ItemsEditInHand()
+        {
+            OnItemsEditInHandEv?.Invoke();
         }
 
         private void Update()
@@ -48,7 +63,7 @@ namespace Game.Unit
             if (Physics.BoxCast(rotateCamera.transform.position, size, rotateCamera.transform.forward,
                     out var hit, rotateCamera.transform.rotation, rayDistance, layerMask))
             {
-                if (hit.collider.TryGetComponent(out InteractableObject  interactableObject) && Input.GetMouseButton(1))
+                if (hit.collider.TryGetComponent(out InteractableObject  interactableObject) && Input.GetMouseButtonDown(0))
                     interactableObject.Execute();
             }
         }

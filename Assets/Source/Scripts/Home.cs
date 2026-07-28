@@ -41,7 +41,7 @@ namespace Game
             var debuff = debuffHeat / timeSecond;
             while (player.Stats.GetHeat() > 0f)
             { 
-                yield return new WaitUntil(() => _player == null);
+                yield return new WaitUntil(() =>!_spawnerStove.Curent.IsFire() || _player == null);
                 player?.Stats.SetHeat(-debuff * Time.deltaTime);
                 yield return null;
             }

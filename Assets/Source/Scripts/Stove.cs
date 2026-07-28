@@ -19,6 +19,10 @@ namespace Game.ObjectInteractable
         private FireWoodTime _fireWoodTime;
 
         public bool IsFull() => _woodPointsList.Count == woodPoints.Length;
+        
+        public bool IsFire() => fire != null ? fire.gameObject.activeSelf : false;
+        
+        public int AmountFireWood => _woodPointsList.Count;
 
         public void Init(FireWoodTime fireWoodTime)
         {
@@ -36,7 +40,7 @@ namespace Game.ObjectInteractable
             if (IsFull()) return false;
 
             for (var i = woodPoints.Length - 1; i >= 0; i--)
-            { 
+            {
                 if (!woodPoints[i].gameObject.activeSelf)
                 {
                     StartCoroutine(FireWood(woodPoints[i]));
@@ -49,9 +53,9 @@ namespace Game.ObjectInteractable
 
         private IEnumerator FireWood(Transform woodPoint)
         {
-            _woodPointsList.Add(woodPoint); 
-            fire.gameObject.SetActive(_woodPointsList.Count == 1);
+            _woodPointsList.Add(woodPoint);
             woodPoint.gameObject.SetActive(true);
+            fire.gameObject.SetActive(_woodPointsList.Count > 0);
             var time = 0f;
             var bonus = _fireWoodTime.heat / _fireWoodTime.time;
             while (time < _fireWoodTime.time)
@@ -63,7 +67,8 @@ namespace Game.ObjectInteractable
 
             _woodPointsList.Remove(woodPoint);
             woodPoint.gameObject.SetActive(false);
-            fire.gameObject.SetActive(_woodPointsList.Count == 0);
+            fire.gameObject.SetActive(_woodPointsList.Count > 0);
+            Debug.Log($" hide  {_woodPointsList.Count == 0}");
         }
     }
 }

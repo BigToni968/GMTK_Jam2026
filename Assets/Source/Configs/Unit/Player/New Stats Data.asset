@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 71e27cc9379b7d744bad37285a934417, type: 3}
   m_Name: New Stats Data
   m_EditorClassIdentifier: 
-  <Speed>k__BackingField: 5
+  <Speed>k__BackingField: 15
   <SpeedMultiplier>k__BackingField: 1
-  <Heat>k__BackingField: 50
+  <Heat>k__BackingField: 100
   <HeatMultiplier>k__BackingField: 1
