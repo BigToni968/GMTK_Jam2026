@@ -47,6 +47,8 @@ namespace Game
                     _recipes[recipe.type] = recipe;
             }
         }
+        
+        public int GetAmount(TypeRes type) => _recipes[type].amount;
 
         public bool TryUpdate(TypeRes type, int amount, out Stove newStove)
         {

@@ -1,6 +1,3 @@
-using System.Collections.Generic;
-using Game.ObjectInteractable;
-using System.Collections;
 using Game.Abstraction;
 using UnityEngine.UI;
 using UnityEngine;
@@ -57,36 +54,11 @@ namespace Game.UI
 
         private void StartCountItems()
         {
-            StartCoroutine(CountTheItems());
-        }
-
-        private IEnumerator CountTheItems()
-        {
-            yield return new WaitForSeconds(1f);
-            
-            var list = new List<int>(4) { 0, 0, 0, 0 };
-
-            foreach (var VARIABLE in player.LHand.GetComponentsInChildren<ItemRes>())
-            {
-                switch (VARIABLE.ResType)
-                {
-                    case TypeRes.Wood:
-                        list[0]++;
-                        break;
-                    case TypeRes.Stone:
-                        list[1]++;
-                        break;
-                    case TypeRes.Iron:
-                        list[2]++;
-                        break;
-                    case TypeRes.Clay:
-                        list[3]++;
-                        break;
-                }
-            }
-
             var text =
-                $"Number of items collected in the left hand:\nWood x {list[0]},\nStone x {list[1]},\nIron x {list[2]},\nClay x {list[3]}.";
+                $"Number of items collected in the left hand:\nWood x {player.LHand.GetAmount(TypeRes.Wood)}," +
+                $"\nStone x {player.LHand.GetAmount(TypeRes.Stone)}," +
+                $"\nIron x {player.LHand.GetAmount(TypeRes.Iron)}," +
+                $"\nClay x {player.LHand.GetAmount(TypeRes.Clay)}.";
             counter.SetText(text);
         }
     }

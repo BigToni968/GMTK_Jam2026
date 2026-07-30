@@ -3,6 +3,7 @@ using Game.Preferences;
 using Game.ReadOnly;
 using UnityEngine;
 using System.IO;
+using UnityEngine.SceneManagement;
 
 namespace Game.Save
 {
@@ -13,6 +14,7 @@ namespace Game.Save
 
         [SerializeField] private PreferencesGameData data;
         [field: SerializeField] public DTO DTO { get; private set; }
+        [SerializeField] private int indexSceneToMenu;
         [SerializeField] private string defaultPath;
         [SerializeField] private bool isLoad = false;
 
@@ -30,10 +32,13 @@ namespace Game.Save
                 Load();
                 return;
             }
-
+            
+            if (SceneManager.GetActiveScene().buildIndex != indexSceneToMenu) return;
+            
             DTO.SetPreferences(new ()
             {
                 sensitivity =  data.Sensitivity,
+                resolution = data.Resolution,
                 screenMode =  data.FullScreenMode,
                 audio =  data.Audio,
             });
@@ -41,7 +46,7 @@ namespace Game.Save
 
         public void Save()
         {
-            var str = JsonUtility.ToJson(DTO);
+            var str = JsonUtility.ToJson(DTO.PreferencesGame);
             File.WriteAllText(Path.Combine(Application.persistentDataPath, nameFile), str);
         }
 
@@ -51,7 +56,7 @@ namespace Game.Save
                 return;
             
             var str = File.ReadAllText(Path.Combine(Application.persistentDataPath, nameFile));
-              JsonUtility.FromJson<PreferencesGame>(str); 
+            DTO.SetPreferences(JsonUtility.FromJson<PreferencesGame>(str));
             
             IsLoaded = true;
         }

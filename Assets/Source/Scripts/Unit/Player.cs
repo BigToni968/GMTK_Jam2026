@@ -1,3 +1,4 @@
+using Game.ObjectInteractable;
 using Game.Unit.Component;
 using Game.Abstraction;
 using Game.Component;
@@ -10,7 +11,7 @@ namespace Game.Unit
     {
         public event Action OnItemsEditInHandEv;
         
-        [field: SerializeField] public Transform LHand { get; private set; }
+        [field: SerializeField] public LHandInventory LHand { get; private set; }
         
         [SerializeField] private Rigidbody body;
         [SerializeField] private RotateCamera  rotateCamera;
@@ -18,8 +19,11 @@ namespace Game.Unit
         [SerializeField] private float rayDistance;
         [SerializeField] private Vector3 size;
         [SerializeField] private Color colorGizmos;
+        [SerializeField] private Color colorPickup;
 
         [field: SerializeField] public Stats Stats { get; private set; }
+        
+        private Collider[] _colliders = new Collider[10];
 
         private void Awake()
         {
@@ -60,11 +64,22 @@ namespace Game.Unit
 
         private void Loop()
         {
-            if (Physics.BoxCast(rotateCamera.transform.position, size, rotateCamera.transform.forward,
-                    out var hit, rotateCamera.transform.rotation, rayDistance, layerMask))
+            if (Physics.Raycast(rotateCamera.transform.position,rotateCamera.transform.forward,out var hit, rayDistance, layerMask))
             {
-                if (hit.collider.TryGetComponent(out InteractableObject  interactableObject) && Input.GetMouseButtonDown(0))
+                if (hit.collider.TryGetComponent(out InteractableObject interactableObject) && Input.GetMouseButtonDown(0))
                     interactableObject.Execute();
+            }
+            
+            Physics.OverlapSphereNonAlloc(transform.position, rayDistance, _colliders, layerMask);
+
+            if (_colliders != null && _colliders.Length > 0 && Input.GetKeyDown(KeyCode.E))
+            {
+                foreach (var collider in _colliders)
+                {
+                    if (collider == null) break;
+                    if (collider.TryGetComponent(out ItemRes res))
+                        res.Execute();
+                }
             }
         }
         
@@ -80,8 +95,9 @@ namespace Game.Unit
             Gizmos.color = Color.green;
             Gizmos.DrawLine(origin, end);
             
-            Gizmos.matrix = Matrix4x4.TRS(end, rotateCamera.transform.rotation, Vector3.one);
-            Gizmos.DrawWireCube(Vector3.zero, size * 2f);
+            Gizmos.color = colorPickup;
+            Gizmos.DrawWireSphere(transform.position, rayDistance);
         }
+        
     }
 }

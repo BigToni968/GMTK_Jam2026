@@ -297,6 +297,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   data: {fileID: 11400000, guid: 650758c3b6002a4429f0bc437d3f4a41, type: 2}
   saver: {fileID: 0}
+  self: {fileID: 5071726478642171627}
+  indexSceneToMenu: 0
   screen: {fileID: 4944038879409093959}
   resolution: {fileID: 3263186315287476220}
   generalVolume: {fileID: 5376496634920092384}

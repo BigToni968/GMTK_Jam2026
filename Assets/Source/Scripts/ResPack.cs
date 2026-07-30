@@ -28,7 +28,7 @@ namespace Game.ObjectInteractable
 
             _hits++;
             var res = Instantiate(prefab);
-            res.transform.position = transform.position + transform.up * 2;
+            res.transform.position = transform.position + Vector3.up * 2;
             res.Init(Player);
             res.Body.AddForce(Vector3.up * force, ForceMode.Impulse);
 
