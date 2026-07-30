@@ -1156,6 +1156,7 @@ MonoBehaviour:
   rayDistance: 5
   size: {x: 0.5, y: 0.5, z: 0.1}
   colorGizmos: {r: 0.28974247, g: 1, b: 0, a: 1}
+  colorPickup: {r: 0, g: 0, b: 0, a: 0}
   <Stats>k__BackingField:
     data: {fileID: 11400000, guid: 0aac5692fe7411f4d95e162c5c59d05c, type: 2}
     <Speed>k__BackingField: 0
@@ -1864,7 +1865,8 @@ MonoBehaviour:
   nameFile: GamePref.json
   data: {fileID: 11400000, guid: 650758c3b6002a4429f0bc437d3f4a41, type: 2}
   <DTO>k__BackingField: {fileID: 11400000, guid: b581194406ceec84a95bdff56ba20b4f, type: 2}
-  defaultPath: C:/Users/I_am_noob/AppData/LocalLow/DefaultCompany/GMTK_Jam2026
+  indexSceneToMenu: 0
+  defaultPath: C:/Users/t440p/AppData/LocalLow/DefaultCompany/GMTK_Jam2026
   isLoad: 0
 --- !u!4 &374620277
 Transform:
@@ -3086,7 +3088,7 @@ Transform:
   m_GameObject: {fileID: 963194225}
   serializedVersion: 2
   m_LocalRotation: {x: 0.000000046660467, y: 0.000000018299756, z: -8.5387517e-16, w: 1}
-  m_LocalPosition: {x: 0, y: 0.5, z: 0}
+  m_LocalPosition: {x: 0, y: 1, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
