@@ -14,6 +14,7 @@ namespace Game.UI
 
         private TypeRes lvlStoreCurrent = TypeRes.Free;
 
+
         private void Awake()
         {
             addFireWood.onClick.AddListener(Add);
@@ -23,6 +24,15 @@ namespace Game.UI
                 Cursor.lockState = CursorLockMode.None;
                 panel.gameObject.SetActive(true);
             };
+        }
+
+        private void Update()
+        {
+            if (Input.GetKeyDown(KeyCode.Escape) && panel.gameObject.activeSelf)
+            {
+                panel.gameObject.SetActive(false);
+                Cursor.lockState = CursorLockMode.Locked;
+            }
         }
 
         private void Add()

@@ -108,7 +108,7 @@ GameObject:
   - component: {fileID: 8454150018374146343}
   - component: {fileID: 7146853994598087988}
   - component: {fileID: 5027005361534074755}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Stove_lvl5
   m_TagString: Untagged
   m_Icon: {fileID: 0}
