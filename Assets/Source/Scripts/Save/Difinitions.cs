@@ -10,6 +10,8 @@ namespace Game.Preferences
         public Vector2Int resolution;
         public FullScreenMode screenMode;
         public AudioGame audio;
+        public bool fogEnabled;
+        public bool particlesEnabled;
     }
 
     [Serializable]

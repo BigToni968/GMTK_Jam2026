@@ -16,3 +16,9 @@ MonoBehaviour:
     sensitivity: {x: 0, y: 0}
     resolution: {x: 0, y: 0}
     screenMode: 0
+    audio:
+      general: 0
+      music: 0
+      sound: 0
+    fogEnabled: 0
+    particlesEnabled: 0

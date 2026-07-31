@@ -3,6 +3,7 @@ using Game.Unit.Component;
 using Game.Abstraction;
 using Game.Component;
 using UnityEngine;
+using Game.Save;
 using System;
 
 namespace Game.Unit
@@ -10,9 +11,9 @@ namespace Game.Unit
     public class Player : MonoBehaviour
     {
         public event Action OnItemsEditInHandEv;
-        
         [field: SerializeField] public LHandInventory LHand { get; private set; }
         
+        [SerializeField] private Saver saver;
         [SerializeField] private Rigidbody body;
         [SerializeField] private RotateCamera  rotateCamera;
         [SerializeField] private LayerMask layerMask;
@@ -48,7 +49,7 @@ namespace Game.Unit
 
         private void LateUpdate()
         {
-            rotateCamera.Rotate(transform,Vector2.one);
+            rotateCamera.Rotate(transform, saver.DTO.PreferencesGame.sensitivity);
         }
 
         private void Move()

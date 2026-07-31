@@ -10,5 +10,7 @@ namespace Game.ReadOnly
         [field: SerializeField] public FullScreenMode FullScreenMode { get; private set; } = FullScreenMode.ExclusiveFullScreen;
         [field: SerializeField] public AudioGame Audio { get; private set; } = new() { general = .25f, music = 1f, sound = 1f };
         [field: SerializeField] public Vector2Int Resolution { get; private set; } = new(1920, 1080);
+        [field: SerializeField] public bool FogEnabled { get; private set; } = true;
+        [field: SerializeField] public bool Particles { get; private set; } =  true;
     }
 }

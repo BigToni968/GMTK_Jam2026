@@ -17,12 +17,20 @@ namespace Game.UI
         [SerializeField] private Saver saver;
         [SerializeField] private Canvas self;
         [SerializeField] private int indexSceneToMenu;
-        [Header("Display")] [SerializeField] private TMP_Dropdown screen;
+        [Header("Display")]
+        [SerializeField] private TMP_Dropdown screen;
         [SerializeField] private TMP_Dropdown resolution;
-        [Header("Audio")] [SerializeField] private Slider generalVolume;
+        [Header("Graphics")]
+        [SerializeField] private Toggle checkBoxFog;
+        [SerializeField] private Toggle checkBoxParticles;
+        [Header("Audio")]
+        [SerializeField] private Slider generalVolume;
         [SerializeField] private Slider musicVolume;
         [SerializeField] private Slider soundVolume;
-        
+        [Header("Gameplay")]
+        [SerializeField] private Slider horizontalSensitivity;
+        [SerializeField] private Slider verticalSensitivity;
+
         private List<Resolution> _resolutions;
 
         private void Start()
@@ -34,16 +42,16 @@ namespace Game.UI
             options.Clear();
             var index = 0;
             var curentRes = Screen.currentResolution;
+            var sensitivity = Vector2.one;
             curentRes.width = data.Resolution.x;
             curentRes.height = data.Resolution.y;
+            checkBoxFog.isOn = saver.DTO.PreferencesGame.fogEnabled;
+            checkBoxParticles.isOn = saver.DTO.PreferencesGame.particlesEnabled;
             _resolutions = new(Screen.resolutions.Length);
 
             foreach (var resolution in Screen.resolutions)
             {
-                if (options.Count > 0 &&
-                    Screen.resolutions[options.Count -1].width == resolution.width)
-                    continue;
-                options.Add($"{resolution.width} x {resolution.height}");
+                options.Add($"{resolution.width} x {resolution.height} Hz {resolution.refreshRate}");
                 _resolutions.Add(resolution);
             }
 
@@ -53,7 +61,8 @@ namespace Game.UI
             {
                 curentRes.width = saver.DTO.PreferencesGame.resolution.x;
                 curentRes.height = saver.DTO.PreferencesGame.resolution.y;
-                screen.value = (int)saver.DTO.PreferencesGame.screenMode; 
+                screen.value = (int)saver.DTO.PreferencesGame.screenMode;
+                sensitivity = saver.DTO.PreferencesGame.sensitivity;
             }
 
             foreach (var resolution in Screen.resolutions)
@@ -63,11 +72,13 @@ namespace Game.UI
             }
 
             resolution.value = index;
-            Debug.Log($"load resolution {curentRes.width}, {curentRes.height}, {(FullScreenMode)screen.value}");
 
             generalVolume.value = saver.DTO.PreferencesGame.audio.general;
             musicVolume.value = saver.DTO.PreferencesGame.audio.music;
-            soundVolume.value = saver.DTO.PreferencesGame.audio.sound; 
+            soundVolume.value = saver.DTO.PreferencesGame.audio.sound;
+
+            horizontalSensitivity.value = sensitivity.x;
+            verticalSensitivity.value = sensitivity.y;
 
             if (SceneManager.GetActiveScene().buildIndex != indexSceneToMenu) return;
             Screen.SetResolution(curentRes.width, curentRes.height, (FullScreenMode)screen.value);
@@ -78,7 +89,7 @@ namespace Game.UI
             var resolutionSelected = _resolutions[resolution.value];
             saver.DTO.SetPreferences(new()
             {
-                sensitivity = Vector2.one,
+                sensitivity = new(horizontalSensitivity.value, verticalSensitivity.value),
                 resolution = new(resolutionSelected.width, resolutionSelected.height),
                 screenMode = (FullScreenMode)screen.value,
                 audio = new()
@@ -86,7 +97,9 @@ namespace Game.UI
                     general = generalVolume.value,
                     music = musicVolume.value,
                     sound = soundVolume.value
-                }
+                },
+                fogEnabled = checkBoxFog.isOn,
+                particlesEnabled = checkBoxParticles.isOn,
             });
 
             saver.Save();

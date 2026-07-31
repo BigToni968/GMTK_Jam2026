@@ -10,6 +10,7 @@ namespace Game
 
         public override void Show()
         {
+            Cursor.lockState = CursorLockMode.None;
             root.gameObject.SetActive(true);
         }
 
