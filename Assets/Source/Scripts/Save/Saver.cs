@@ -32,6 +32,8 @@ namespace Game.Save
                     resolution = data.Resolution,
                     screenMode = data.FullScreenMode,
                     audio = data.Audio,
+                    particlesEnabled = data.Particles,
+                    fogEnabled = data.FogEnabled
                 });
                 Load();
                 return;
@@ -51,8 +53,7 @@ namespace Game.Save
         {
             if (!File.Exists(Path.Combine(Application.persistentDataPath, nameFile)))
                 return;
-
-            Debug.Log(Application.persistentDataPath);
+            
             var str = File.ReadAllText(Path.Combine(Application.persistentDataPath, nameFile));
             DTO.SetPreferences(JsonUtility.FromJson<PreferencesGame>(str));
 

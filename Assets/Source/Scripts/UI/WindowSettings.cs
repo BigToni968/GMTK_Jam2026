@@ -55,6 +55,12 @@ namespace Game.UI
                 _resolutions.Add(resolution);
             }
 
+            if (options.Count < 1)
+            {
+                var resolution = Screen.currentResolution;
+                options.Add($"{resolution.width} x {resolution.height} Hz {resolution.refreshRate}");
+            }
+
             resolution.AddOptions(options);
 
             if (saver.IsLoaded)
@@ -86,7 +92,7 @@ namespace Game.UI
 
         public void Apply()
         {
-            var resolutionSelected = _resolutions[resolution.value];
+            var resolutionSelected = _resolutions == null || _resolutions.Count < 1?Screen.currentResolution:_resolutions[resolution.value];
             saver.DTO.SetPreferences(new()
             {
                 sensitivity = new(horizontalSensitivity.value, verticalSensitivity.value),
